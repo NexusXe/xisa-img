@@ -29,15 +29,16 @@ impl MajorMinorVersionPair {
     #[must_use]
     pub const fn from_le_bytes(b: [u8; 8]) -> Self {
         Self {
-            major: u32::from_le_bytes([b[0], b[1], b[2], b[3]]),
-            minor: u32::from_le_bytes([b[4], b[5], b[6], b[7]]),
+            major: u32::from_le_bytes([b[4], b[5], b[6], b[7]]),
+            minor: u32::from_le_bytes([b[0], b[1], b[2], b[3]]),
         }
     }
     #[must_use]
     pub const fn from_ne_bytes(b: [u8; 8]) -> Self {
-        Self {
-            major: u32::from_ne_bytes([b[0], b[1], b[2], b[3]]),
-            minor: u32::from_ne_bytes([b[4], b[5], b[6], b[7]]),
+        if cfg!(target_endian = "little") {
+            Self::from_le_bytes(b)
+        } else {
+            Self::from_be_bytes(b)
         }
     }
 
@@ -49,15 +50,18 @@ impl MajorMinorVersionPair {
     }
     #[must_use]
     pub const fn to_le_bytes(self) -> [u8; 8] {
-        let [a, b, c, d] = self.major.to_le_bytes();
-        let [e, f, g, h] = self.minor.to_le_bytes();
+        let [e, f, g, h] = self.major.to_le_bytes();
+        let [a, b, c, d] = self.minor.to_le_bytes();
+
         [a, b, c, d, e, f, g, h]
     }
     #[must_use]
     pub const fn to_ne_bytes(self) -> [u8; 8] {
-        let [a, b, c, d] = self.major.to_ne_bytes();
-        let [e, f, g, h] = self.minor.to_ne_bytes();
-        [a, b, c, d, e, f, g, h]
+        if cfg!(target_endian = "little") {
+            self.to_le_bytes()
+        } else {
+            self.to_be_bytes()
+        }
     }
 }
 
