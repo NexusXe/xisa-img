@@ -1,0 +1,24 @@
+[package]
+name = "xisa-img"
+# MAJOR.MINOR is the platform contract version the images are sealed for
+# (manual 14.1: 0.8 is 0.8.x here); PATCH counts this tool's own changes.
+# `CONTRACT_VERSION` is derived from it.
+version = "0.8.0"
+edition = "2024"
+rust-version = "1.85"
+description = "The xisa standard image (manual 14.5): seal and check flat images, kernels included"
+repository = "https://github.com/NexusXe/xisa-img"
+readme = "README.md"
+keywords = ["xisa", "image", "kernel", "boot"]
+categories = ["command-line-utilities", "embedded", "no-std"]
+
+[lib]
+name = "xisa_img"
+path = "src/lib.rs"
+
+[[bin]]
+name = "xisa-img"
+path = "src/main.rs"
+
+[dependencies]
+konst = { version = "0.3.17", features = ["parsing", "rust_latest_stable"], default-features = false }
