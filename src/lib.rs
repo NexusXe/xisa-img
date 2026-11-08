@@ -7,8 +7,6 @@
 //! `no_std` and dependency-free: firmware, simulators, and host tools share
 //! it. The `xisa-img` binary seals and checks images on the host.
 #![no_std]
-#![feature(const_trait_impl)]
-#![feature(const_convert)]
 #![warn(clippy::pedantic, clippy::nursery)]
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -65,7 +63,7 @@ impl MajorMinorVersionPair {
     }
 }
 
-const impl From<u64> for MajorMinorVersionPair {
+impl From<u64> for MajorMinorVersionPair {
     fn from(v: u64) -> Self {
         Self {
             major: (v >> 32) as u32,
@@ -74,9 +72,9 @@ const impl From<u64> for MajorMinorVersionPair {
     }
 }
 
-const impl From<MajorMinorVersionPair> for u64 {
+impl From<MajorMinorVersionPair> for u64 {
     fn from(p: MajorMinorVersionPair) -> Self {
-        (p.major as u64) << 32 | p.minor as u64
+        Self::from(p.major) << 32 | Self::from(p.minor)
     }
 }
 
